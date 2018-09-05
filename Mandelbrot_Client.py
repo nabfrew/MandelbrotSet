@@ -74,20 +74,6 @@ def Main():
                 sThread = sendTask(address,qin,qout)         #creates thread for server
                 sThread.setName('Server nr '+str(i+1))  #names thread
                 sThread.start()                         #get it going
-
-        #s=socket.socket()                               #create socket for server
-        #s.connect(address)                              #connect socket to address
-        #message = q.get()+'\n'
-        #print(message)       
-        #s.send(message.encode())
         
 if __name__ == '__main__':
     Main()
-
-
-##        message = input(" -> ") 
-##        while message != 'q':
-##                mySocket.send(message.encode())
-##                data = mySocket.recv(1024).decode()
-##                print ('Received from server: ' + data)
-##                message = input(" -> ")
