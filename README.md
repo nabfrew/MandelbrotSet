@@ -1,5 +1,5 @@
 "# MandelbrotSet" 
-Server and client programs for calculating Mandelbrot sets and outputting as PMG files.
+Server and client programs in python3 for calculating Mandelbrot sets and outputting as PMG files.
 The client distributes taks to the server.
 
 Client takes positional command line inputs
@@ -18,4 +18,14 @@ port -p port to listen to, defaults to 5000
 
 It is highly reccomended to install numba for faster calculation, but the code will run without it. It is structured so that it attempts the fastest method availible. Alternative methods are easy to add by defining new MandelSet() to the nested try/except part of the server code. Further work could include chosing method by optional command line arguments.
 
-Note: As explained over email, the programs are not complete, remaining to be done is the code for dividing up tasks and piecing together the output from the servers. With a little more time I am sure I would have no problem doing this, and may do so at a later time if you like.
+The example output files were generated with the commands:
+$python Mandelbrot_Client.py -0.74880 0.163749 -0.745667 0.16551 1000 1920 1080 500 localhost:5000 localhost:5001
+$python Mandelbrot_Client.py -0.74880 0.163749 -0.745667 0.16551 1000 1920 1080 100 localhost:5000 localhost:5001
+
+Known issues/further work: 
+- The method of recombining the subfigures into the final image does not scale well and could be improved.
+- The program fails if the sub-figure sizes are large, greater than ~50 pixels
+- There is an error somewhere in how the pixels are assigned under some circumstances. See the bottom right corner in the example output attached for 500 divisions. Some sub-figures in this case also seem to not come through, leaving gaps showing as black squares in the picture. 
+
+Unfortunately I have not been able to solve these issues in a reasonable time.
+The program has only been tested on one computer, testing on a real network is still needed.
