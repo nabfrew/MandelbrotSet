@@ -33,17 +33,23 @@ try:                            #Numba just-in-time compiler implementation
     @jit
     def MandelSet(min_c_re,min_c_im,max_c_re,max_c_im,x,y,max_n):
         z_str = ''  #empty string to append values to
-        re_step = (max_c_re - min_c_re)/(x-1)   #amount to increment c values by
-        im_step = (max_c_im - min_c_im)/(y-1)
+
+        if(x==1):       #in case image widh or thickness is  a single strip, avoid dividing by zero (step size is irrelevant)
+            re_step=0
+        else:
+            re_step = (max_c_re - min_c_re)/(x-1)   #amount to increment c values by
+        if(y==1):
+            im_step=0
+        else:
+            im_step = (max_c_im - min_c_im)/(y-1)
         real = min_c_re #starting values for top left corner.
         imaginary = max_c_im
         for j in range(y):          #typical nested loop order convention for i/j is reveresed to start in top left while keeping conventional association with i&x,j&y
             for i in range(x):
                 z_str += str(MandelValue(real + 1j*imaginary,max_n))
-                print('Re = ' + str(real) + ' Im = ' + str(imaginary) +'\n')
-                if i!=x: z_str += ' '
+                if i!=x-1: z_str += ' '
                 real += re_step
-            if j!=y: z_str += '\n'
+            if j!=y-1: z_str += '\n'
             real=min_c_re
             imaginary -= im_step
         return z_str
@@ -66,10 +72,9 @@ except ImportError:
         for j in range(y):          #typical nested loop order convention for i/j is reveresed to start in top left while keeping conventional association with i&x,j&y
             for i in range(x):
                 z_str += str(MandelValue(real + 1j*imaginary,max_n))
-                print('Re = ' + str(real) + ' Im = ' + str(imaginary) +'\n')
-                if i!=x: z_str += ' '
+                if i!=x-1: z_str += ' '
                 real += re_step
-            if j!=y: z_str += '\n'
+            if j!=y-1: z_str += '\n'
             real=min_c_re
             imaginary -= im_step
         return z_str
@@ -97,6 +102,7 @@ def Main():
             data = conn.recv(1024).decode()
             if not data:
                     break
+            print(data)
             data=re.findall("\{(.*?)\}", data)  #parse request.
             if len(data)is not 7:
                 print("incorrect input\n")
@@ -114,14 +120,14 @@ def Main():
             print ("from connected  user: " + str(data))         
             
             z_str = MandelSet(min_c_re,min_c_im,max_c_re,max_c_im,x,y,max_n)
-            print('\nSending data. zval: '+str(sys.getsizeof(z_str))+' bytes.\n')
+            #print('\nSending data. zval: '+str(sys.getsizeof(z_str))+' bytes.\n')
             #Sending larger dataset was the big timesuck roadblock for me. I tried a few prepackaged methods of converting numpy
             #arrys that didn't seem to work. Ended up writing a function to convert numpy array to string
             #before realising I could modify the mandelbrot function to outpt str to begin with. 
             #sending over TCP
             conn.send(z_str.encode())
             conn.send('END'.encode())   #marks completion of transmission to client
-            #mandelbrot_image(z_val,min_c_re,min_c_im,max_c_re,max_c_im,x,y)
+            #mandelbrot_image(z_str,min_c_re,min_c_im,max_c_re,max_c_im,x,y)
  
     conn.close()
     #mandelbrot_image(zval,min_c_re,min_c_im,max_c_re,max_c_im,x,y)
