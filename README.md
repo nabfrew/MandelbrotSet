@@ -19,7 +19,9 @@ port -p port to listen to, defaults to 5000
 It is highly reccomended to install numba for faster calculation, but the code will run without it. It is structured so that it attempts the fastest method availible. Alternative methods are easy to add by defining new MandelSet() to the nested try/except part of the server code. Further work could include chosing method by optional command line arguments.
 
 The example output files were generated with the commands:
+
 $python Mandelbrot_Client.py -0.74880 0.163749 -0.745667 0.16551 500 1920 1080 500 localhost:5000 localhost:5001
+
 $python Mandelbrot_Client.py -0.74880 0.163749 -0.745667 0.16551 500 1920 1080 100 localhost:5000 localhost:5001
 
 Known issues/further work: 
